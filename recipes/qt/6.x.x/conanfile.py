@@ -296,6 +296,14 @@ class QtConan(ConanFile):
             # Raise when consumed in the host context, but allow compatible when
             # in the build context
             check_min_cppstd(self, 17)
+        # C++ minimum standard required
+        if self.settings.compiler.get_safe("cppstd"):
+            check_min_cppstd(self, 17, gnu_extensions=Version(self.version) >= "6.8.0")
+        minimum_version = self._minimum_compilers_version.get(str(self.settings.compiler), False)
+        if not minimum_version:
+            self.output.warning("C++17 support required. Your compiler is unknown. Assuming it supports C++17.")
+        elif Version(self.settings.compiler.version) < minimum_version:
+            raise ConanInvalidConfiguration("C++17 support required, which your compiler does not support.")
 
         if self.settings.compiler == "apple-clang" and Version(self.settings.compiler.version) < "12":
             raise ConanInvalidConfiguration("apple-clang >= 12 required by qt >= 6.4.0")
@@ -747,6 +755,13 @@ class QtConan(ConanFile):
         replace_in_file(self, os.path.join(self.source_folder, "qtbase", "configure.cmake"),
             "set_property(TARGET ZLIB::ZLIB PROPERTY IMPORTED_GLOBAL TRUE)",
             "")
+        # workaround https://bugreports.qt.io/browse/QTBUG-94356
+        if Version(self.version) < "6.8.0":
+            replace_in_file(self, os.path.join(self.source_folder, "qtbase", "cmake", "FindWrapSystemZLIB.cmake"), '"-lz"', "ZLIB::ZLIB")
+
+        if Version(self.version) <= "6.4.0":
+            # use official variable name https://cmake.org/cmake/help/latest/module/FindFontconfig.html
+            replace_in_file(self, os.path.join(self.source_folder, "qtbase", "src", "gui", "configure.cmake"), "FONTCONFIG_FOUND", "Fontconfig_FOUND")
 
         replace_in_file(self,
                         os.path.join(self.source_folder, "qtbase", "cmake", "QtAutoDetect.cmake" if Version(self.version) < "6.6.2" else "QtAutoDetectHelpers.cmake"),
@@ -908,6 +923,7 @@ class QtConan(ConanFile):
             targets.extend(["qmlformat", "qml", "qmlprofiler", "qmlpreview"])
             if Version(self.version) >= "6.8.0":
                 targets.append("qmlaotstats")
+
             # Note: consider "qmltestrunner", see https://github.com/conan-io/conan-center-index/issues/24276
         if self.options.get_safe("qtremoteobjects"):
             targets.append("repc")
@@ -1022,6 +1038,24 @@ class QtConan(ConanFile):
             _create_private_module("Qml", ["CorePrivate", "Qml"])
             module = package_path.joinpath("lib", "cmake", "Qt6Qml", "conan_qt_qt6_policies.cmake")
             save(self, module, "set(QT_KNOWN_POLICY_QTP0001 TRUE)\n")
+            contents = textwrap.dedent("""\
+                    set(QT_KNOWN_POLICY_QTP0001 TRUE)
+                    set(QT_KNOWN_POLICY_QTP0002 TRUE)
+                """)
+
+            if Version(self.version) >= "6.7.0":
+                contents += textwrap.dedent("""\
+                    set(QT_KNOWN_POLICY_QTP0003 TRUE)
+                """)
+
+            if Version(self.version) >= "6.8.0":
+                contents += textwrap.dedent("""\
+                    set(QT_KNOWN_POLICY_QTP0004 TRUE)
+                    set(QT_KNOWN_POLICY_QTP0005 TRUE)
+                """)
+
+            save(self, os.path.join(self.package_folder, "lib", "cmake", "Qt6Qml", "conan_qt_qt6_policies.cmake"), contents)
+
             if self.options.gui and self.options.qtshadertools:
                 _create_private_module("Quick", ["CorePrivate", "GuiPrivate", "QmlPrivate", "Quick"])
 
@@ -1227,16 +1261,27 @@ class QtConan(ConanFile):
                     # https://github.com/qt/qtbase/blob/v6.5.3/src/gui/CMakeLists.txt#L963
                     self.cpp_info.components["qtGui"].frameworks.append("Metal")
                 if self.settings.os in ["iOS", "tvOS"]:
-                    _create_plugin("QIOSIntegrationPlugin", "qios", "platforms", [])
-                    # https://github.com/qt/qtbase/blob/v6.6.1/src/plugins/platforms/ios/CMakeLists.txt#L32-L37
-                    self.cpp_info.components["QIOSIntegrationPlugin"].frameworks = [
-                        "AudioToolbox", "Foundation", "Metal", "QuartzCore", "UIKit", "CoreGraphics"
-                    ]
-                    if self.settings.os != "tvOS":
-                        # https://github.com/qt/qtbase/blob/v6.6.1/src/plugins/platforms/ios/CMakeLists.txt#L66-L68
-                        self.cpp_info.components["QIOSIntegrationPlugin"].frameworks += [
-                            "AssetsLibrary", "UniformTypeIdentifiers", "Photos",
+                    if not self.options.shared:
+                        # https://github.com/qt/qtbase/blob/v6.6.1/src/plugins/platforms/cocoa/CMakeLists.txt#L51-L58
+                        self.cpp_info.components["QCocoaIntegrationPlugin"].frameworks = [
+                            "AppKit", "Carbon", "CoreServices", "CoreVideo", "IOKit", "IOSurface", "Metal", "QuartzCore"
                         ]
+                        if Version(self.version) >= "6.8.0":
+                                self.cpp_info.components["QCocoaIntegrationPlugin"].frameworks.append("UniformTypeIdentifiers")
+                elif self.settings.os in ["iOS", "tvOS"]:
+                    _create_plugin("QIOSIntegrationPlugin", "qios", "platforms", [])
+                    if not self.options.shared:
+                        # https://github.com/qt/qtbase/blob/v6.6.1/src/plugins/platforms/ios/CMakeLists.txt#L32-L37
+                        self.cpp_info.components["QIOSIntegrationPlugin"].frameworks = [
+                            "AudioToolbox", "Foundation", "Metal", "QuartzCore", "UIKit", "CoreGraphics"
+                        ]
+                        if self.settings.os != "tvOS":
+                            # https://github.com/qt/qtbase/blob/v6.6.1/src/plugins/platforms/ios/CMakeLists.txt#L66-L68
+                            self.cpp_info.components["QIOSIntegrationPlugin"].frameworks += [
+                                "UniformTypeIdentifiers", "Photos",
+                            ]
+                            if Version(self.version) < "6.8.0":
+                                self.cpp_info.components["QIOSIntegrationPlugin"].frameworks.append("AssetsLibrary")
                 elif self.settings.os == "watchOS":
                     _create_plugin("QMinimalIntegrationPlugin", "qminimal", "platforms", [])
             elif self.settings.os == "Emscripten":
@@ -1568,10 +1613,11 @@ class QtConan(ConanFile):
                     # https://github.com/qt/qtbase/blob/v6.6.1/src/corelib/CMakeLists.txt#L598-L606
                     self.cpp_info.components["qtCore"].frameworks.append("AppKit")
                     self.cpp_info.components["qtCore"].frameworks.append("ApplicationServices")
-                    self.cpp_info.components["qtCore"].frameworks.append("CoreServices")
+                    self.cpp_info.components["qtCore"].frameworks.append("CoreFoundation")
                     self.cpp_info.components["qtCore"].frameworks.append("CoreServices")
                     self.cpp_info.components["qtCore"].frameworks.append("Security")
                     self.cpp_info.components["qtCore"].frameworks.append("DiskArbitration")
+                    self.cpp_info.components["qtCore"].frameworks.append("UniformTypeIdentifiers")
                 else:
                     # https://github.com/qt/qtbase/blob/v6.6.1/src/corelib/CMakeLists.txt#L969-L972
                     self.cpp_info.components["qtCore"].frameworks.append("MobileCoreServices")
@@ -1606,8 +1652,14 @@ class QtConan(ConanFile):
                 if os.path.isfile(module):
                     _add_build_module(component_name, module)
 
+                if Version(self.version) >= "6.8.0":
+                    module = os.path.join("lib", "cmake", m, f"{m}PublicCMakeHelpers.cmake")
+                    if os.path.isfile(module):
+                        _add_build_module(component_name, module)
+
                 for helper_modules in glob.glob(os.path.join(self.package_folder, "lib", "cmake", m, "QtPublic*Helpers.cmake")):
                     _add_build_module(component_name, helper_modules)
+
                 self.cpp_info.components[component_name].builddirs.append(os.path.join("lib", "cmake", m))
 
             elif component_name.endswith("Tools") and component_name[:-5] in self.cpp_info.components:
