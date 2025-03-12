@@ -308,7 +308,7 @@ class QtConan(ConanFile):
             check_min_cppstd(self, 17)
         # C++ minimum standard required
         if self.settings.compiler.get_safe("cppstd"):
-            check_min_cppstd(self, 17, gnu_extensions=Version(self.version) >= "6.8.0")
+            check_min_cppstd(self, 17, gnu_extensions=self.settings.compiler == "gcc" and Version(self.version) >= "6.8.0")
 
         if self.settings.compiler == "apple-clang" and Version(self.settings.compiler.version) < "12":
             raise ConanInvalidConfiguration("apple-clang >= 12 required by qt >= 6.4.0")
