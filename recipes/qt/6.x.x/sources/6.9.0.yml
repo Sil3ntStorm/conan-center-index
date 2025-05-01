@@ -1,0 +1,49 @@
+hashes:
+  qt3d:               "521dd56d40873d37b2dd9ca95181037b833a07c48aed5db44efcba83a4716cc2"  #  141.8 MB
+  qt5:                "e7e031a04cec9afbe4d2a37618c1de8d6187cccd3c559c0ff80a7bedc2a53207"  #    0.0 MB
+  qt5compat:          "55be0539d3a12071fbe0cd57af17d6dc3fc52578b1649824975e26301f710763"  #   14.6 MB
+  qtactiveqt:         "23314bd8740fc4911025028cf20bfcdffa799f0beb55a7799463c016f604853e"  #    0.3 MB
+  qtbase:             "c1800c2ea835801af04a05d4a32321d79a93954ee3ae2172bbeacf13d1f0598c"  #   49.7 MB
+  qtcharts:           "8a1c9287f25fe47b110ada87e8c73b928a93f05435440d0a27f591d25c317f28"  #    4.7 MB
+  qtcoap:             "efa98979b1e9bc4bfc7d6438128fc83fbff8713f4bfbccb5312f62db9e4f112d"  #    0.0 MB
+  qtconnectivity:     "ff402f8dacb2b9f9308afcea67118ae1645ce6466f2d41a8d5c12fd2fa168598"  #    1.1 MB
+  qtdatavis3d:        "310cb713d58c932a8dfaee3c7cd4cac7f2f77ee8e01038ff7df3f0c87f9d8015"  #    4.0 MB
+  qtdeclarative:      "a3175fa510847a136734f989e2bfea7f7bbb9dc9acc98b40b544d26f5ba20d3d"  #   36.8 MB
+  qtdoc:              "1f3b636b3c2cfac17a39e4ab5eaa74f1ea9c3d0faab0f06180378f30e22eb9fd"  #   46.3 MB
+  qtgraphs:           "9e5b08cdc1934b2525b5586a458861c180ee9f3aaccf6c36bac37b502afaa0c6"  #    5.2 MB
+  qtgrpc:             "3957e076181ac0d9a8f9fca93ec49e1e5e143e39eee1ec3feee10ca13f64b137"  #    0.6 MB
+  qthttpserver:       "91d2cfef1b4c4c09c6189ab26a3a0afa02f0e9512683aecf4d1b44e56112ae73"  #    0.2 MB
+  qtimageformats:     "2047c6242a57bf97cf40079fa9f91752c137cd9ae84760faa9a2e5e8a440606f"  #    2.0 MB
+  qtlanguageserver:   "eee65e036152eee36b63127013fb8e4f0cbbde66bae5f88864b56b70e357492e"  #    0.2 MB
+  qtlocation:         "ada25ac4c1aa2b2daec0c21198dbb30004453869911724816c6ce7ecb3826794"  #    3.2 MB
+  qtlottie:           "d4ba1614a587a279266036b1b08ac854718458fdd39708b37afde74f0b4afabe"  #    0.1 MB
+  qtmqtt:             "7cdec84ca17ad2bd9d47418ca98820705a7798895a2315b5c20c46528a29547e"  #    0.0 MB
+  qtmultimedia:       "995c3b194f3de3e1929280639642f7661d94aa57523c459dbbf2f71dbdcaa18c"  #    9.7 MB
+  qtnetworkauth:      "fac708b4227d4964d1d127cc6330b103a59a422a1e8334752506c454f7feb418"  #    0.4 MB
+  qtopcua:            "5a3a0eadb25b814da2dfc570f91b84cc523a031affa9bfea7733d6141c513c2e"  #    0.0 MB
+  qtpositioning:      "c00b4c01d92bf99c5562910aab59f80146b976cdb1dcb7bd2f27833624605ed1"  #    0.7 MB
+  qtquick3d:          "a295268fdca5aeaab6bb4bb1a0a4d2720b19679ab5145c5185dac7ac3399e488"  #   75.6 MB
+  qtquick3dphysics:   "5f1e2f7e591faf14d0d7e6e397a15707a7b8536e52cb3c07ce3425ddf55826a0"  #    4.7 MB
+  qtquickeffectmaker: "916213e4ca38e1a65949686dcf0139d81faf4f4619e3b68eb893c5f0065071aa"  #    4.4 MB
+  qtquicktimeline:    "339f2cdd0b731615a215534799ed865e222fc797f431ad4a6677a6d5c862e648"  #    0.1 MB
+  qtremoteobjects:    "f43a12f4fd78fda436b03f58f87b65f7f696866a8f51581a76aaf9e7239770dd"  #    0.5 MB
+  qtscxml:            "a73bb5241c124d776d79ea24749d707b71365e395d8af3382a1f1c43a69a6892"  #    0.6 MB
+  qtsensors:          "a46137c1f4a768d00397a2f83de7018318b0ca35d39c848da62d1783b368e467"  #    1.5 MB
+  qtserialbus:        "0d46093411f2256e2c27d7a2d56fccb51b52753f14eb92a1a93e0da04585593f"  #    0.6 MB
+  qtserialport:       "fbe762f5ca6b3e58fbbf51604928b50cf14628b670eaeab57751e07a4086b954"  #    0.3 MB
+  qtshadertools:      "916c40281ac3dee23b163f6ca73fb5bdeee344838b9a922b6f36269642d6f4bb"  #    1.2 MB
+  qtspeech:           "a981b68c71743d77a3ce4437ad118d3851390f05a1ab26a859fb9b8c5938c971"  #    0.3 MB
+  qtsvg:              "ec359d930c95935ea48af58b100c2f5d0d275968ec8ca1e0e76629b7159215fc"  #    2.0 MB
+  qttools:            "fa645589cc3f939022401a926825972a44277dead8ec8607d9f2662e6529c9a4"  #   10.3 MB
+  qttranslations:     "1d5581ef5fc7c7bc556f2403017983683993bbebfcdf977ef8f180f604668c3f"  #    1.6 MB
+  qtvirtualkeyboard:  "b85489ffbdd50cc42ea6a74f266215782045668a99cafc73007f6b4b28d69127"  #    3.3 MB
+  qtwayland:          "503416fcb04db503bd130e6a49c45e3e546f091e83406f774a0c703130c91805"  #    1.2 MB
+  qtwebchannel:       "10519a9cdde17a7d955f332480c6bcd1202e4b2c48fd94eb31efaa21d0fabfee"  #    0.2 MB
+  qtwebengine:        "2b33d1c85e85ed58729db228448f92105ab746ffdc9b98f0c4e3bf00b789789e"  #  672.2 MB
+  qtwebsockets:       "6b3add7cacf3a4e0b448d5e69d9dac42795fef63309038af1dc5a454ce514940"  #    0.5 MB
+  qtwebview:          "5b24070e8ceb12c3c4df5a887f3ffc3544193646386e6ce18e41c20d42d7ed6b"  #    0.1 MB
+git_only:
+  - qt5
+  - qtcoap
+  - qtmqtt
+  - qtopcua
