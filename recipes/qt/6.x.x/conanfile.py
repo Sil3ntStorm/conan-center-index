@@ -308,7 +308,7 @@ class QtConan(ConanFile):
             check_min_cppstd(self, 17)
         # C++ minimum standard required
         if self.settings.compiler.get_safe("cppstd"):
-            check_min_cppstd(self, 17, gnu_extensions=self.settings.compiler == "gcc" and Version(self.version) >= "6.8.0")
+            check_min_cppstd(self, 17)
 
         if self.settings.compiler == "apple-clang" and Version(self.settings.compiler.version) < "12":
             raise ConanInvalidConfiguration("apple-clang >= 12 required by qt >= 6.4.0")
@@ -804,6 +804,9 @@ class QtConan(ConanFile):
                 patches.append(patch)
         self.conan_data["patches"][self.version] = patches
         apply_conandata_patches(self)
+
+        if Version(self.version) >= "6.9.0":
+            replace_in_file(self, os.path.join(self.source_folder, "qtbase", "src", "corelib", "global", "qsystemdetection.h"), "#if !defined(Q_OS_VXWORKS) && !defined(_MSC_VER)", "#if 0")
 
         if self.options.get_safe("qtwebengine"):
             for f in ["renderer", os.path.join("renderer", "core"), os.path.join("renderer", "platform")]:
